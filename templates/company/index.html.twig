@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+{% block title 'Companies' %}
+{% block pageTitle 'Companies' %}
+{% block pageSubtitle 'List of companies' %}
+
+{% block body %}
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Phone</th>
+                    <th>Mail</th>
+                    <th>Turn over</th>
+                    <th>Users limit</th>
+                    <th>Manage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for company in companies %}
+                    <tr>
+                        <td>{{ company.name|upper }}</td>
+                        <td>
+                            <span>
+                                {{ company.address1 }}<br />
+                                {% if(company.address2 is not null) %}
+                                    {{ company.address2 }}<br />
+                                {% endif %}
+                                {{ company.zipcode }} {{ company.city|upper }}
+                            </span>
+                        </td>
+                        <td>{{ company.phone }}</td>
+                        <td>{{ company.mail }}</td>
+                        <td>{{ company.turnover }}</td>
+                        <td>{{ company.userslimit }}</td>
+                        <td>
+                            <a href="{{ path('company_edit', {'id': company.id}) }}" class="btn btn-sm btn-primary" role="button" aria-disabled="true">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger" role="button" aria-disabled="true">Remove</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6">No company found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
