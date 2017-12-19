@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -57,9 +59,15 @@ class Company
     private $turnover;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="company")
      */
-    private $users_limit;
+    private $users;
+
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -198,18 +206,10 @@ class Company
     }
 
     /**
-     * @return mixed
+     * @return Collection|User[]
      */
-    public function getUsersLimit()
+    public function getUsers()
     {
-        return $this->users_limit;
-    }
-
-    /**
-     * @param mixed $users_limit
-     */
-    public function setUsersLimit($users_limit)
-    {
-        $this->users_limit = $users_limit;
+        return $this->users;
     }
 }
