@@ -16,7 +16,7 @@ class CompanyController extends Controller
     /**
      * Show companies list.
      *
-     * @Route("/company", name="company_list")
+     * @Route("/company", name="company.list")
      */
     public function index()
     {
@@ -31,55 +31,91 @@ class CompanyController extends Controller
     /**
      * Create a new company.
      *
-     * @Route("/company/create", name="company_create")
+     * @Route("/company/create", name="company.create")
      */
-    public function create()
+    public function create(Request $request)
     {
-        $form = $this->form(new Company());
-
-        return $this->render('company/create-edit.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->form(new Company(), $request);
     }
 
     /**
      * Edit a company.
      *
-     * @Route("/company/{id}/edit", name="company_edit")
+     * @Route("/company/{id}/edit", name="company.edit")
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
         $company = $this->getDoctrine()
             ->getRepository(Company::class)
             ->find($id);
 
-        $form = $this->form($company);
+        if (!$company) {
+            throw $this->createNotFoundException(
+                'No company found for id '.$id
+            );
+        }
 
-        return $this->render('company/create-edit.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->form($company, $request);
     }
 
     /**
-     * Create company form.
+     * @param $id
+     * @Route("/company/{id}/remove", name="company.remove")
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function remove($id)
+    {
+        $company = $this->getDoctrine()
+            ->getRepository(Company::class)
+            ->find($id);
+
+        if (!$company) {
+            throw $this->createNotFoundException(
+                'No company found for id '.$id
+            );
+        }
+
+        $this->getDoctrine()
+            ->getRepository(Company::class)
+            ->remove($company);
+
+        return $this->redirectToRoute('company.list');
+    }
+
+    /**
+     * Return create or edit form.
      *
      * @param Company $company
-     * @return \Symfony\Component\Form\FormInterface
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function form(Company $company)
+    public function form(Company $company, Request $request)
     {
-       $form = $this->createFormBuilder($company)
+        $form = $this->createFormBuilder($company)
            ->add('name', TextType::class, ['attr' => ['placeholder' => 'Name']])
-           ->add('address1', TextType::class, ['empty_data' => 'address1', 'attr' => ['placeholder' => 'Address line 1']])
-           ->add('address2', TextType::class, ['required' => false, 'attr' => ['placeholder' => 'Address line 2']])
+           ->add('address1', TextType::class, ['label' => 'Address line 1', 'attr' => ['placeholder' => 'Address line 1']])
+           ->add('address2', TextType::class, ['label' => 'Address line 2', 'required' => false, 'attr' => ['placeholder' => 'Address line 2']])
            ->add('zip_code', TextType::class, ['empty_data' => 'zip_code', 'attr' => ['placeholder' => 'Zip Code']])
            ->add('city', TextType::class, ['empty_data' => 'city', 'attr' => ['placeholder' => 'City']])
            ->add('phone', TelType::class, ['required' => false, 'attr' => ['placeholder' => 'Phone']])
            ->add('mail', TextType::class, ['required' => false, 'attr' => ['placeholder' => 'Mail']])
            ->add('turnover', NumberType::class, ['required' => false, 'attr' => ['placeholder' => 'Turnover']])
-           ->add('save', SubmitType::class, ['label' => 'Create company'])
+           ->add('save', SubmitType::class, ['label' => is_null($company->getID()) ? 'Create company' : 'Update company', 'attr' => ['class' => 'btn btn-success']])
            ->getForm();
 
-       return $form;
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()
+                ->getRepository(Company::class)
+                ->save($form->getData());
+
+            return $this->redirectToRoute('company.list');
+        }
+
+
+        return $this->render('company/create-edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 }

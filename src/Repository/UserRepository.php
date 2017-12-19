@@ -13,16 +13,36 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    /*
-    public function findBySomething($value)
+    /**
+     * Save an user.
+     *
+     * @param User $user
+     * @return User
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function save(User $user)
     {
-        return $this->createQueryBuilder('u')
-            ->where('u.something = :value')->setParameter('value', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $em = $this->getEntityManager();
+
+        if (is_null($user->getID())) {
+            $em->persist($user);
+        }
+
+        $em->flush();
+
+        return $user;
     }
-    */
+
+    /**
+     * Delete an user.
+     *
+     * @param User $user
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function remove(User $user)
+    {
+        $em = $this->getEntityManager();
+        $em->remove($user);
+        $em->flush();
+    }
 }

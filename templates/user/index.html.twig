@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+{% block title 'Users' %}
+{% block pageTitle 'Users' %}
+{% block pageSubtitle 'List of users' %}
+
+{% block body %}
+    <div class="row btn-add">
+        <div class="col-12">
+             <a href="{{ path('user.create') }}" class="btn float-right btn-lg btn-success" role="button" aria-disabled="true">Add</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Lastname</th>
+                    <th>Firstname</th>
+                    <th>Mail</th>
+                    <th>Company</th>
+                    <th>Manage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.lastname|upper }}</td>
+                        <td>{{ user.firstname }}</td>
+                        <td>{{ user.mail }}</td>
+                        <td>{{ user.company.name }}</td>
+                        <td>
+                            <a href="{{ path('user.edit', {'id': user.id}) }}" class="btn btn-sm btn-primary" role="button" aria-disabled="true">Edit</a>
+                            <a href="{{ path('user.remove', {'id': user.id}) }}" class="btn btn-sm btn-danger" role="button" aria-disabled="true">Remove</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">No user found</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

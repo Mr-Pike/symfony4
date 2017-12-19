@@ -29,11 +29,11 @@ class User
     /**
      * @ORM\Column(type="string", length=120, unique=true)
      */
-    private $email;
+    private $mail;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="users")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="users", cascade={"persist"})
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id", nullable=true)
      */
     private $company;
 
@@ -81,29 +81,29 @@ class User
     /**
      * @return mixed
      */
-    public function getEmail()
+    public function getMail()
     {
-        return $this->email;
+        return $this->mail;
     }
 
     /**
-     * @param mixed $email
+     * @param mixed $mail
      */
-    public function setEmail($email)
+    public function setMail($mail)
     {
-        $this->email = $email;
+        $this->mail = $mail;
     }
 
     /**
-     * @return mixed
+     * @return Company
      */
-    public function getCompany() : Company
+    public function getCompany()//: Company
     {
         return $this->company;
     }
 
     /**
-     * @param mixed $company
+     * @param Company $company
      */
     public function setCompany(Company $company)
     {

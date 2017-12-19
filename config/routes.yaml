@@ -1,7 +1,15 @@
 index:
     path: /
-    defaults: { _controller: 'App\Controller\DefaultController::index' }
+    defaults: { _controller: 'App\Controller\CompanyController::index' }
 
 companies:
     path: /company
     defaults: { _controller: 'App\Controller\CompanyController::index' }
+
+users:
+    path: /user
+    defaults: { _controller: 'App\Controller\UserController::index' }
+
+projects:
+    path: /project
+    defaults: { _controller: 'App\Controller\ProjectController::index' }

@@ -6,7 +6,7 @@
 {% block body %}
     <div class="row btn-add">
         <div class="col-12">
-             <a href="{{ path('company_create') }}" class="btn float-right btn-lg btn-success" role="button" aria-disabled="true">Add</a>
+             <a href="{{ path('company.create') }}" class="btn float-right btn-lg btn-success" role="button" aria-disabled="true">Add</a>
         </div>
     </div>
 
@@ -41,8 +41,8 @@
                         <td>{{ company.turnover }}</td>
                         <td>{{ company.users.count() }}</td>
                         <td>
-                            <a href="{{ path('company_edit', {'id': company.id}) }}" class="btn btn-sm btn-primary" role="button" aria-disabled="true">Edit</a>
-                            <a href="#" class="btn btn-sm btn-danger" role="button" aria-disabled="true">Remove</a>
+                            <a href="{{ path('company.edit', {'id': company.id}) }}" class="btn btn-sm btn-primary" role="button" aria-disabled="true">Edit</a>
+                            <a href="{{ path('company.remove', {'id': company.id}) }}" class="btn btn-sm btn-danger" role="button" aria-disabled="true">Remove</a>
                         </td>
                     </tr>
                 {% else %}

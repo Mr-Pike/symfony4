@@ -13,16 +13,36 @@ class CompanyRepository extends ServiceEntityRepository
         parent::__construct($registry, Company::class);
     }
 
-    /*
-    public function findBySomething($value)
+    /**
+     * Save a company.
+     *
+     * @param Company $company
+     * @return Company
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function save(Company $company)
     {
-        return $this->createQueryBuilder('c')
-            ->where('c.something = :value')->setParameter('value', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $em = $this->getEntityManager();
+
+        if (is_null($company->getID())) {
+            $em->persist($company);
+        }
+
+        $em->flush();
+
+        return $company;
     }
-    */
+
+    /**
+     * Delete a company.
+     *
+     * @param Company $company
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function remove(Company $company)
+    {
+        $em = $this->getEntityManager();
+        $em->remove($company);
+        $em->flush();
+    }
 }
