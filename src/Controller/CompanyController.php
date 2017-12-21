@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Entity\User;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Routing\Annotation\Route as Route;
@@ -80,6 +81,50 @@ class CompanyController extends Controller
             ->remove($company);
 
         return $this->redirectToRoute('company.list');
+    }
+
+    /**
+     * Show tree of users'company.
+     *
+     * @param $id
+     * @Route("/company/{id}/tree", name="company.tree")
+     */
+    public function tree($id)
+    {
+        // Get user of company.
+        $usersOfCompany = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->findByCompany($id);
+
+        $usersTree = $usersRemaining = [];
+
+        // Get user first level.
+        foreach ($usersOfCompany as $user) {
+            if (is_null($user->getManager())) {
+                $usersTree[] = [$user->getId(), $user->getId(), '|--', mb_strtoupper($user->getLastName()) . ' ' .$user->getFirstName()];
+                continue;
+            }
+
+            $usersRemaining[] = $user;
+        }
+
+
+        while (count($usersRemaining) > 0) {
+            $branchs = [];
+            foreach($usersRemaining as $userRemaining) {
+                foreach($usersTree as $userTree) {
+                    if ($userTree[0] == $userRemaining->getManager()->getId()) {
+                        $branchs[] = [$userRemaining->getId(), $userTree[1].'-'.$userRemaining->getId(), $userTree[2].'|--', mb_strtoupper($userRemaining->getLastName()) . ' ' .$userRemaining->getFirstName()];
+                    }
+                }
+            }
+
+            $usersTree = array_merge($usersTree, $branchs);
+            $usersRemaining = array_diff($usersTree, $branchs);
+            break;
+        }
+
+        return $this->render('company/tree.html.twig', compact('usersTree'));
     }
 
     /**

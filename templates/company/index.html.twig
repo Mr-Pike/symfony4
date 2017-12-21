@@ -42,6 +42,7 @@
                         <td>{{ company.users.count() }}</td>
                         <td>
                             <a href="{{ path('company.edit', {'id': company.id}) }}" class="btn btn-sm btn-primary" role="button" aria-disabled="true">Edit</a>
+                            <a href="{{ path('company.tree', {'id': company.id}) }}" class="btn btn-sm btn-warning" role="button" aria-disabled="true">Tree</a>
                             <a href="{{ path('company.remove', {'id': company.id}) }}" class="btn btn-sm btn-danger" role="button" aria-disabled="true">Remove</a>
                         </td>
                     </tr>

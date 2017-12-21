@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -20,11 +21,15 @@ class Company
 
     /**
      * @ORM\Column(type="string", length=60, unique=true)
+     * @Assert\NotBlank()
+     * @Assert\Length(min=5)
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=120)
+     * @Assert\NotBlank()
+     * @Assert\Length(min=10)
      */
     private $address1;
 
@@ -35,11 +40,13 @@ class Company
 
     /**
      * @ORM\Column(type="string", length=10)
+     * @Assert\Length(min=5)
      */
     private $zip_code;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\Length(min=5)
      */
     private $city;
 
@@ -50,11 +57,21 @@ class Company
 
     /**
      * @ORM\Column(type="string", length=100, unique=true, nullable=true)
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true
+     * )
      */
     private $mail;
 
     /**
      * @ORM\Column(type="decimal", length=50, precision=10, scale=2, nullable=true)
+     * @Assert\Range(
+     *      min = 0,
+     *      max = 999999999999.99,
+     *      minMessage = "The turnover is a number between 0 and 999999999999.99",
+     *      maxMessage = "The turnover is a number between 0 and 999999999999.99r"
+     * )
      */
     private $turnover;
 

@@ -5,7 +5,7 @@
 
 {% block body %}
     <div class="row btn-add">
-        <div class="col-12">
+        <div class="col-6">
              <a href="{{ path('user.create') }}" class="btn float-right btn-lg btn-success" role="button" aria-disabled="true">Add</a>
         </div>
     </div>
@@ -18,6 +18,7 @@
                     <th>Firstname</th>
                     <th>Mail</th>
                     <th>Company</th>
+                    <th>Manager</th>
                     <th>Manage</th>
                 </tr>
             </thead>
@@ -28,6 +29,7 @@
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.mail }}</td>
                         <td>{{ user.company.name }}</td>
+                        <td>{% if user.manager is null %} - {% else %} {{ user.manager.lastname|upper }} {{ user.manager.firstname }} {% endif %} </td>
                         <td>
                             <a href="{{ path('user.edit', {'id': user.id}) }}" class="btn btn-sm btn-primary" role="button" aria-disabled="true">Edit</a>
                             <a href="{{ path('user.remove', {'id': user.id}) }}" class="btn btn-sm btn-danger" role="button" aria-disabled="true">Remove</a>

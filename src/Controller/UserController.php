@@ -10,6 +10,7 @@ use Symfony\Component\Routing\Annotation\Route as Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class UserController extends Controller
@@ -101,6 +102,15 @@ class UserController extends Controller
                 'multiple' => false,
                 'expanded' => false
             ])
+            ->add('manager', EntityType::class, [
+                'class' => User::class,
+                'choice_label' => function ($user) {
+                    return mb_strtoupper($user->getLastName()) . ' ' .$user->getFirstName();
+                },
+                'multiple' => false,
+                'expanded' => false
+            ])
+            ->add('isManager', CheckboxType::class, ['label' => 'Manager', 'required' => false])
             ->add('save', SubmitType::class, ['label' => is_null($user->getID()) ? 'Create user' : 'Update user', 'attr' => ['class' => 'btn btn-success']])
             ->getForm();
 

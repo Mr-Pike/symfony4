@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
@@ -17,12 +18,12 @@ class User
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=60, unique=true)
+     * @ORM\Column(type="string", length=60)
      */
     private $firstName;
 
     /**
-     * @ORM\Column(type="string", length=60, unique=true)
+     * @ORM\Column(type="string", length=60)
      */
     private $lastName;
 
@@ -32,10 +33,21 @@ class User
     private $mail;
 
     /**
+     * @ORM\Column(type="boolean", options={"default":true})
+     */
+    private $isManager;
+
+    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="users", cascade={"persist"})
      * @ORM\JoinColumn(name="company_id", referencedColumnName="id", nullable=true)
      */
     private $company;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="id", cascade={"persist"})
+     * @ORM\JoinColumn(name="manager_id", referencedColumnName="id", nullable=true)
+     */
+    private $manager;
 
 
     /**
@@ -110,5 +122,35 @@ class User
         $this->company = $company;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getIsManager()
+    {
+        return $this->isManager;
+    }
 
+    /**
+     * @param bool $isManager
+     */
+    public function setIsManager($isManager)
+    {
+        $this->isManager = $isManager;
+    }
+
+    /**
+     * @return User
+     */
+    public function getManager()
+    {
+        return $this->manager;
+    }
+
+    /**
+     * @param User $manager
+     */
+    public function setManager(User $manager)
+    {
+        $this->manager = $manager;
+    }
 }
