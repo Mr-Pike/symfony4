@@ -101,28 +101,36 @@ class CompanyController extends Controller
         // Get user first level.
         foreach ($usersOfCompany as $user) {
             if (is_null($user->getManager())) {
-                $usersTree[] = [$user->getId(), $user->getId(), '|--', mb_strtoupper($user->getLastName()) . ' ' .$user->getFirstName()];
+                $usersTree[] = [$user->getId(), $user->getId(), '', mb_strtoupper($user->getLastName()) . ' ' .$user->getFirstName()];
                 continue;
             }
 
             $usersRemaining[] = $user;
         }
 
-
+        // Get other levels.
         while (count($usersRemaining) > 0) {
+            $user = array_shift($usersRemaining);
             $branchs = [];
-            foreach($usersRemaining as $userRemaining) {
-                foreach($usersTree as $userTree) {
-                    if ($userTree[0] == $userRemaining->getManager()->getId()) {
-                        $branchs[] = [$userRemaining->getId(), $userTree[1].'-'.$userRemaining->getId(), $userTree[2].'|--', mb_strtoupper($userRemaining->getLastName()) . ' ' .$userRemaining->getFirstName()];
-                    }
+            foreach($usersTree as $userTree) {
+                if ($userTree[0] == $user->getManager()->getId()) {
+                    $branchs[] = [$user->getId(), $userTree[1].'-'.$user->getId(), $userTree[2].'|--', mb_strtoupper($user->getLastName()) . ' ' .$user->getFirstName()];
+                    $user = null;
+                    break;
                 }
             }
 
+            if (!is_null($user)) {
+                $usersRemaining[count($usersRemaining) - 1] = $user;
+            }
+
             $usersTree = array_merge($usersTree, $branchs);
-            $usersRemaining = array_diff($usersTree, $branchs);
-            break;
         }
+
+        // Sort by value.
+        usort($usersTree, function($a, $b) {
+            return $a[1] <=> $b[1];
+        });
 
         return $this->render('company/tree.html.twig', compact('usersTree'));
     }

@@ -4,16 +4,10 @@
 {% block pageSubtitle 'Tree of employee' %}
 
 {% block body %}
-    <div class="row btn-add">
-        <div class="col-6">
-            <a href="{{ path('user.create') }}" class="btn float-right btn-lg btn-success" role="button" aria-disabled="true">Add</a>
-        </div>
-    </div>
-
     <div class="row">
         <p>
             {% for user in usersTree %}
-                {{ user[2] }} {{ user[3] }} <br />
+                {{ user[2] }}&nbsp;<label><input id="{{ user[1] }}" type="checkbox" checked></label>&nbsp;{{ user[3] }} <br />
             {% else %}
                 No user found
             {% endfor %}
