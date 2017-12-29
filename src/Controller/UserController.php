@@ -18,15 +18,18 @@ class UserController extends Controller
     /**
      * Show users list.
      *
-     * @Route("/user", name="user.list")
+     * @Route("/user/{page}", requirements={"page" = "\d+"}, name="user.list")
      */
-    public function index()
+    public function index($page = 1)
     {
-        $users = $this->getDoctrine()
-            ->getRepository(User::class)
-            ->findAll();
+        $userRepository = $this->getDoctrine()
+            ->getRepository(User::class);
 
-        return $this->render('user/index.html.twig', compact('users'));
+        $users = $userRepository->list(($page - 1) * 20);
+        $totalUsers = $userRepository->count([]);
+        $totalPages = ceil($totalUsers / 20);
+
+        return $this->render('user/index.html.twig', compact('users', 'totalUsers', 'totalPages', 'page'));
     }
 
     /**
@@ -103,6 +106,8 @@ class UserController extends Controller
                 'expanded' => false
             ])
             ->add('manager', EntityType::class, [
+                'placeholder' => '-- Manager --',
+                'empty_data'  => null,
                 'class' => User::class,
                 'choice_label' => function ($user) {
                     return mb_strtoupper($user->getLastName()) . ' ' .$user->getFirstName();

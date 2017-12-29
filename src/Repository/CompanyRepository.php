@@ -5,6 +5,9 @@ namespace App\Repository;
 use App\Entity\Company;
 use App\Entity\CompanyList;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use InvalidArgumentException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class CompanyRepository extends ServiceEntityRepository
@@ -17,14 +20,28 @@ class CompanyRepository extends ServiceEntityRepository
     /**
      * Get list of companies.
      */
-    public function list()
+    public function list($firstResult, $maxResult = 20)
     {
-        return $this->getEntityManager()
+        if (!is_numeric($firstResult) || $firstResult < 0) {
+            throw new InvalidArgumentException('The current page does not exists.');
+        }
+
+        $query = $this->getEntityManager()
               ->createQuery('
                 SELECT C
                 FROM App\Entity\CompanyList C
+                ORDER BY C.name DESC
               ')
-              ->getResult();
+              ->setFirstResult($firstResult)
+              ->setMaxResults($maxResult);
+
+        $paginator = new Paginator($query);
+
+        if ($firstResult != 1 && $paginator->count() == 0) {
+            throw new NotFoundHttpException('The current page does not exists.');
+        }
+
+        return new Paginator($query);
     }
 
     /**

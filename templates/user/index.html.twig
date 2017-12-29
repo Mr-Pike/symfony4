@@ -5,8 +5,11 @@
 
 {% block body %}
     <div class="row btn-add">
-        <div class="col-12">
-             <a href="{{ path('user.create') }}" class="btn float-right btn-lg btn-success" role="button" aria-disabled="true">Add</a>
+        <div class="col-6">
+          Total users: {{ totalUsers }}
+        </div>
+        <div class="col-6">
+             <a href="{{ path('user.create') }}" class="btn float-right btn-md btn-success" role="button" aria-disabled="true">Add</a>
         </div>
     </div>
 
@@ -28,8 +31,8 @@
                         <td>{{ user.lastname|upper }}</td>
                         <td>{{ user.firstname }}</td>
                         <td>{{ user.mail }}</td>
-                        <td>{{ user.company.name }}</td>
-                        <td>{% if user.manager is null %} - {% else %} {{ user.manager.lastname|upper }} {{ user.manager.firstname }} {% endif %} </td>
+                        <td>{{ user.companyname }}</td>
+                        <td>{% if user.managerlastname is null %} - {% else %} {{ user.managerlastname|upper }} {{ user.managerfirstname }} {% endif %} </td>
                         <td>
                             <a href="{{ path('user.edit', {'id': user.id}) }}" class="btn btn-sm btn-primary" role="button" aria-disabled="true">Edit</a>
                             <a href="{{ path('user.remove', {'id': user.id}) }}" class="btn btn-sm btn-danger" role="button" aria-disabled="true">Remove</a>
@@ -43,4 +46,8 @@
             </tbody>
         </table>
     </div>
+
+    {% if totalPages != 1 %}
+        {% include './generic/pagination.html.twig' ignore missing %}
+    {% endif %}
 {% endblock %}

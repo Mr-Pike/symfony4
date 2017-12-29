@@ -5,8 +5,11 @@
 
 {% block body %}
     <div class="row btn-add">
-        <div class="col-12">
-             <a href="{{ path('company.create') }}" class="btn float-right btn-lg btn-success" role="button" aria-disabled="true">Add</a>
+        <div class="col-6">
+          Total companies: {{ totalCompanies }}
+        </div>
+        <div class="col-6">
+             <a href="{{ path('company.create') }}" class="btn float-right btn-md btn-success" role="button" aria-disabled="true">Add</a>
         </div>
     </div>
 
@@ -38,7 +41,7 @@
                         </td>
                         <td>{{ company.phone }}</td>
                         <td>{{ company.mail }}</td>
-                        <td>{{ company.turnover }} &euro;</td>
+                        <td>{{ company.turnover is null ? '-' : '$'~company.turnover|number_format(2, '.', ',') }}</td>
                         <td>{{ company.nbusers }}</td>
                         <td>
                             <a href="{{ path('company.edit', {'id': company.id}) }}" class="btn btn-sm btn-primary" role="button" aria-disabled="true">Edit</a>
@@ -54,4 +57,7 @@
             </tbody>
         </table>
     </div>
+    {% if totalPages != 1 %}
+        {% include './generic/pagination.html.twig' ignore missing %}
+    {% endif %}
 {% endblock %}

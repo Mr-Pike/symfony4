@@ -2,9 +2,6 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -81,27 +78,11 @@ class CompanyList
     }
 
     /**
-     * @param mixed $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
      * @return mixed
      */
     public function getAddress1()
     {
         return $this->address1;
-    }
-
-    /**
-     * @param mixed $address1
-     */
-    public function setAddress1($address1)
-    {
-        $this->address1 = $address1;
     }
 
     /**
@@ -113,27 +94,11 @@ class CompanyList
     }
 
     /**
-     * @param mixed $address2
-     */
-    public function setAddress2($address2)
-    {
-        $this->address2 = $address2;
-    }
-
-    /**
      * @return mixed
      */
     public function getZipCode()
     {
         return $this->zip_code;
-    }
-
-    /**
-     * @param mixed $zip_code
-     */
-    public function setZipCode($zip_code)
-    {
-        $this->zip_code = $zip_code;
     }
 
     /**
@@ -145,27 +110,11 @@ class CompanyList
     }
 
     /**
-     * @param mixed $city
-     */
-    public function setCity($city)
-    {
-        $this->city = $city;
-    }
-
-    /**
      * @return mixed
      */
     public function getPhone()
     {
         return $this->phone;
-    }
-
-    /**
-     * @param mixed $phone
-     */
-    public function setPhone($phone)
-    {
-        $this->phone = $phone;
     }
 
     /**
@@ -177,35 +126,11 @@ class CompanyList
     }
 
     /**
-     * @param mixed $mail
-     */
-    public function setMail($mail)
-    {
-        $this->mail = $mail;
-    }
-
-    /**
      * @return mixed
      */
     public function getTurnover()
     {
         return $this->turnover;
-    }
-
-    /**
-     * @param mixed $turnover
-     */
-    public function setTurnover($turnover)
-    {
-        $this->turnover = $turnover;
-    }
-
-    /**
-     * @param mixed $turnover
-     */
-    public function setNbUsers($nb_users)
-    {
-        $this->nb_users = $nb_users;
     }
 
     /**

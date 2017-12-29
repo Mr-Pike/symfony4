@@ -3,7 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Entity\UserList;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use InvalidArgumentException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class UserRepository extends ServiceEntityRepository
@@ -11,6 +15,33 @@ class UserRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, User::class);
+    }
+
+    /**
+     * Get list of users.
+     */
+    public function list($firstResult, $maxResult = 20)
+    {
+        if (!is_numeric($firstResult) || $firstResult < 0) {
+            throw new InvalidArgumentException('The current page does not exists.');
+        }
+
+        $query = $this->getEntityManager()
+              ->createQuery('
+                SELECT U
+                FROM App\Entity\UserList U
+                ORDER BY U.lastName, U.firstName
+              ')
+              ->setFirstResult($firstResult)
+              ->setMaxResults($maxResult);
+
+        $paginator = new Paginator($query);
+
+        if ($firstResult != 1 && $paginator->count() == 0) {
+            throw new NotFoundHttpException('The current page does not exists.');
+        }
+
+        return new Paginator($query);
     }
 
     /**

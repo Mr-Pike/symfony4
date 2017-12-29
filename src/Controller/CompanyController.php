@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Company;
-use App\Entity\CompanyList;
 use App\Entity\User;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -18,15 +17,18 @@ class CompanyController extends Controller
     /**
      * Show companies list.
      *
-     * @Route("/company", name="company.list")
+     * @Route("/company/{page}", requirements={"page" = "\d+"}, name="company.list")
      */
-    public function index()
+    public function index($page = 1)
     {
-        $companies = $this->getDoctrine()
-            ->getRepository(Company::class)
-            ->list();
+        $companyRepository = $this->getDoctrine()
+            ->getRepository(Company::class);
 
-        return $this->render('company/index.html.twig', compact('companies'));
+        $companies = $companyRepository->list(($page - 1) * 20);
+        $totalCompanies = $companyRepository->count([]);
+        $totalPages = ceil($totalCompanies / 20);
+
+        return $this->render('company/index.html.twig', compact('companies', 'totalCompanies', 'totalPages', 'page'));
     }
 
     /**

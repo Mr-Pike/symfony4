@@ -21,23 +21,30 @@ class User
 
     /**
      * @ORM\Column(type="string", length=60)
+     * @Assert\NotBlank()
+     * @Assert\Length(min=1)
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=60)
+     * @Assert\NotBlank()
+     * @Assert\Length(min=1)
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=120, unique=true)
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = true
+     * )
      */
     private $mail;
 
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="users", cascade={"persist"})
-     * @ORM\JoinColumn(name="company_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="company_id", referencedColumnName="id", nullable=false)
      */
     private $company;
 
@@ -128,22 +135,6 @@ class User
     public function setCompany(Company $company)
     {
         $this->company = $company;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getIsManager()
-    {
-        return $this->isManager;
-    }
-
-    /**
-     * @param bool $isManager
-     */
-    public function setIsManager($isManager)
-    {
-        $this->isManager = $isManager;
     }
 
     /**
