@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Company;
+use App\Entity\CompanyList;
 use App\Entity\User;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -23,8 +24,7 @@ class CompanyController extends Controller
     {
         $companies = $this->getDoctrine()
             ->getRepository(Company::class)
-            ->findAll();
-
+            ->list();
 
         return $this->render('company/index.html.twig', compact('companies'));
     }
@@ -91,46 +91,9 @@ class CompanyController extends Controller
      */
     public function tree($id)
     {
-        // Get user of company.
-        $usersOfCompany = $this->getDoctrine()
+        $usersTree = $this->getDoctrine()
             ->getRepository(User::class)
-            ->findByCompany($id);
-
-        $usersTree = $usersRemaining = [];
-
-        // Get user first level.
-        foreach ($usersOfCompany as $user) {
-            if (is_null($user->getManager())) {
-                $usersTree[] = [$user->getId(), $user->getId(), '', mb_strtoupper($user->getLastName()) . ' ' .$user->getFirstName()];
-                continue;
-            }
-
-            $usersRemaining[] = $user;
-        }
-
-        // Get other levels.
-        while (count($usersRemaining) > 0) {
-            $user = array_shift($usersRemaining);
-            $branchs = [];
-            foreach($usersTree as $userTree) {
-                if ($userTree[0] == $user->getManager()->getId()) {
-                    $branchs[] = [$user->getId(), $userTree[1].'-'.$user->getId(), $userTree[2].'|--', mb_strtoupper($user->getLastName()) . ' ' .$user->getFirstName()];
-                    $user = null;
-                    break;
-                }
-            }
-
-            if (!is_null($user)) {
-                $usersRemaining[count($usersRemaining) - 1] = $user;
-            }
-
-            $usersTree = array_merge($usersTree, $branchs);
-        }
-
-        // Sort by value.
-        usort($usersTree, function($a, $b) {
-            return $a[1] <=> $b[1];
-        });
+            ->getTree($id);
 
         return $this->render('company/tree.html.twig', compact('usersTree'));
     }

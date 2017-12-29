@@ -38,8 +38,8 @@
                         </td>
                         <td>{{ company.phone }}</td>
                         <td>{{ company.mail }}</td>
-                        <td>{{ company.turnover }}</td>
-                        <td>{{ company.users.count() }}</td>
+                        <td>{{ company.turnover }} &euro;</td>
+                        <td>{{ company.nbusers }}</td>
                         <td>
                             <a href="{{ path('company.edit', {'id': company.id}) }}" class="btn btn-sm btn-primary" role="button" aria-disabled="true">Edit</a>
                             <a href="{{ path('company.tree', {'id': company.id}) }}" class="btn btn-sm btn-warning" role="button" aria-disabled="true">Tree</a>

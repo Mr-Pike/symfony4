@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Company;
+use App\Entity\CompanyList;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -11,6 +12,19 @@ class CompanyRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Company::class);
+    }
+
+    /**
+     * Get list of companies.
+     */
+    public function list()
+    {
+        return $this->getEntityManager()
+              ->createQuery('
+                SELECT C
+                FROM App\Entity\CompanyList C
+              ')
+              ->getResult();
     }
 
     /**

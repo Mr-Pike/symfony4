@@ -110,7 +110,6 @@ class UserController extends Controller
                 'multiple' => false,
                 'expanded' => false
             ])
-            ->add('isManager', CheckboxType::class, ['label' => 'Manager', 'required' => false])
             ->add('save', SubmitType::class, ['label' => is_null($user->getID()) ? 'Create user' : 'Update user', 'attr' => ['class' => 'btn btn-success']])
             ->getForm();
 

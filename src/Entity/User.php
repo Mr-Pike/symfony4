@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -32,10 +34,6 @@ class User
      */
     private $mail;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default":true})
-     */
-    private $isManager;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Company", inversedBy="users", cascade={"persist"})
@@ -44,11 +42,21 @@ class User
     private $company;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="id", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\User", mappedBy="manager")
+     */
+    private $ressources;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="ressources", cascade={"persist"})
      * @ORM\JoinColumn(name="manager_id", referencedColumnName="id", nullable=true)
      */
     private $manager;
 
+
+    public function __construct()
+    {
+        $this->ressources = new ArrayCollection();
+    }
 
     /**
      * @return mixed
