@@ -10,8 +10,10 @@ use Symfony\Component\Routing\Annotation\Route as Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserController extends Controller
 {
@@ -37,9 +39,9 @@ class UserController extends Controller
      *
      * @Route("/user/create", name="user.create")
      */
-    public function create(Request $request)
+    public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
-        return $this->form(new User(), $request);
+        return $this->form(new User(), $request, $passwordEncoder);
     }
 
     /**
@@ -47,7 +49,7 @@ class UserController extends Controller
      *
      * @Route("/user/{id}/edit", name="user.edit")
      */
-    public function edit($id, Request $request)
+    public function edit($id, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $user = $this->getDoctrine()
             ->getRepository(User::class)
@@ -59,7 +61,7 @@ class UserController extends Controller
             );
         }
 
-        return $this->form($user, $request);
+        return $this->form($user, $request, $passwordEncoder);
     }
 
     /**
@@ -93,11 +95,12 @@ class UserController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function form(User $user, Request $request)
+    public function form(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
         $form = $this->createFormBuilder($user)
             ->add('firstname', TextType::class, ['attr' => ['placeholder' => 'Firstname']])
             ->add('lastname', TextType::class, ['attr' => ['placeholder' => 'Lastname']])
+            ->add('plainpassword', PasswordType::class, ['attr' => ['placeholder' => 'Password']])
             ->add('mail', TextType::class, ['required' => false, 'attr' => ['placeholder' => 'Mail']])
             ->add('company', EntityType::class, [
                 'class' => Company::class,
@@ -123,7 +126,7 @@ class UserController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()
                 ->getRepository(User::class)
-                ->save($form->getData());
+                ->save($form->getData(), $passwordEncoder);
 
             return $this->redirectToRoute('user.list');
         }

@@ -90,6 +90,7 @@ class CompanyController extends Controller
      *
      * @param $id
      * @Route("/company/{id}/tree", name="company.tree")
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function tree($id)
     {

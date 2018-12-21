@@ -41,6 +41,9 @@
             "ref": "c1431086fec31f17fbcfe6d6d7e92059458facc1"
         }
     },
+    "doctrine/event-manager": {
+        "version": "v1.0.0"
+    },
     "doctrine/inflector": {
         "version": "v1.2.0"
     },
@@ -56,8 +59,17 @@
     "doctrine/orm": {
         "version": "v2.5.13"
     },
+    "doctrine/persistence": {
+        "version": "v1.1.0"
+    },
+    "doctrine/reflection": {
+        "version": "v1.0.0"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
+    },
+    "nikic/php-parser": {
+        "version": "v4.1.0"
     },
     "ocramius/package-versions": {
         "version": "1.2.0"
@@ -103,6 +115,9 @@
             "version": "3.3",
             "ref": "9f94d3ea453cd8a3b95db7f82592d7344fe3a76a"
         }
+    },
+    "symfony/contracts": {
+        "version": "v1.0.2"
     },
     "symfony/debug": {
         "version": "v4.0.1"
@@ -176,6 +191,9 @@
     "symfony/orm-pack": {
         "version": "v1.0.5"
     },
+    "symfony/polyfill-ctype": {
+        "version": "v1.10.0"
+    },
     "symfony/polyfill-intl-icu": {
         "version": "v1.6.0"
     },
@@ -200,17 +218,29 @@
             "ref": "a249484db698d1a847a30291c8f732414ac47e25"
         }
     },
-    "symfony/stopwatch": {
-        "version": "v4.0.2"
-    },
-    "symfony/translation": {
+    "symfony/security-bundle": {
         "version": "3.3",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
             "version": "3.3",
-            "ref": "6bcd6c570c017ea6ae5a7a6a027c929fd3542cd8"
+            "ref": "f8a63faa0d9521526499c0a8f403c9964ecb0527"
         }
+    },
+    "symfony/security-core": {
+        "version": "v4.2.1"
+    },
+    "symfony/security-csrf": {
+        "version": "v4.2.1"
+    },
+    "symfony/security-guard": {
+        "version": "v4.2.1"
+    },
+    "symfony/security-http": {
+        "version": "v4.2.1"
+    },
+    "symfony/stopwatch": {
+        "version": "v4.0.2"
     },
     "symfony/twig-bridge": {
         "version": "v4.0.1"
@@ -229,6 +259,9 @@
     },
     "symfony/var-dumper": {
         "version": "v4.0.2"
+    },
+    "symfony/var-exporter": {
+        "version": "v4.2.1"
     },
     "symfony/web-profiler-bundle": {
         "version": "3.3",

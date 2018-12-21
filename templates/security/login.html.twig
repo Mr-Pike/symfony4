@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="Axysweb">
+    <title>Application - {% block title %}Welcome!{% endblock %}</title>
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
+    {% block stylesheets %}{% endblock %}
+</head>
+    <body>
+        <div class="row">
+        <div class="col-md-6 login-form-1">
+    {% if error %}
+        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <form action="{{ path('login') }}" method="post">
+        <label for="mail">Mail</label>
+        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="_password" />
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}"
+        >
+
+        {#
+            If you want to control the URL the user
+            is redirected to on success (more details below)
+            <input type="hidden" name="_target_path" value="/account" />
+        #}
+
+        <button type="submit">login</button>
+    </form>
+</body>

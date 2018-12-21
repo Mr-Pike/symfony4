@@ -1,0 +1,38 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        #in_memory: { memory: ~ }
+        our_db_provider:
+            entity:
+                class: App\Entity\User
+                # the property to query by - e.g. username, email, etc
+                property: mail
+
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
+            cost: 15
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: ~
+            form_login:
+                login_path: login
+                check_path: login
+                csrf_token_generator: security.csrf.token_manager
+            logout:
+                path:  /logout
+                target: /
+                invalidate_session: true
+
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: ROLE_USER }
+        # - { path: ^/user, roles: ROLE_USER }
+        # - { path: ^/company, roles: ROLE_USER }
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }

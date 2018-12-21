@@ -4,17 +4,24 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\UserList;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityRepository;
 use InvalidArgumentException;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserRepository extends ServiceEntityRepository
+class UserRepository extends EntityRepository implements UserLoaderInterface
 {
-    public function __construct(RegistryInterface $registry)
+
+    public function loadUserByUsername($mail)
     {
-        parent::__construct($registry, User::class);
+        return $this->createQueryBuilder('u')
+            ->where('u.mail = :mail')
+            ->setParameter('mail', $mail)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**
@@ -51,9 +58,13 @@ class UserRepository extends ServiceEntityRepository
      * @return User
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function save(User $user)
+    public function save(User $user, UserPasswordEncoderInterface $passwordEncoder)
     {
         $em = $this->getEntityManager();
+
+        // 3) Encode the password (you could also do this via Doctrine listener)
+        $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
+        $user->setPassword($password);
 
         if (is_null($user->getID())) {
             $em->persist($user);
